@@ -252,7 +252,7 @@
       <h3>טופס מתעניינים/ות</h3>
       <p class="lead">מלאו את הפרטים ונחזור אליכם בהקדם.</p>
 
-      <form action="https://formsubmit.co/tomsh@tfi.org.il" method="POST">
+      <form action="https://formsubmit.co/tomsh@tfi.org.il" method="POST" id="leadForm">
         <input type="hidden" name="_subject" value="מתעניין/ת חדש/ה — תואר שני בחינוך יוצר">
         <input type="hidden" name="_template" value="table">
         <input type="hidden" name="_captcha" value="false">
@@ -324,5 +324,21 @@
 
 
   </div>
+
+<script>
+(function(){
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbywYcAc7bnQEVzAz69xs0ZcNa5Oef9woYgGpJf9bCJAYoTM-QEVT9uySGpl6-dq1gPp/exec';
+  var form = document.getElementById('leadForm');
+  if (!form) return;
+  form.addEventListener('submit', function(){
+    try {
+      var data = new FormData(form);
+      data.append('_source', 'pedagogy.github.io');
+      fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: data });
+    } catch (e) {}
+  });
+})();
+</script>
+
 </body>
 </html>
