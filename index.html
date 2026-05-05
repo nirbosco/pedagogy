@@ -252,13 +252,14 @@
       <h3>טופס מתעניינים/ות</h3>
       <p class="lead">מלאו את הפרטים ונחזור אליכם בהקדם.</p>
 
-      <form action="https://formsubmit.co/tomsh@tfi.org.il" method="POST" id="leadForm">
-        <input type="hidden" name="_subject" value="מתעניין/ת חדש/ה — תואר שני בחינוך יוצר">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_cc" value="nirbo@tfi.org.il">
-        <input type="hidden" name="_next" value="https://formsubmit.co/thanks">
+      <form id="leadForm">
         <input type="text" name="_honey" style="display:none">
+        <div id="thankYou" style="display:none;padding:32px 8px;text-align:center">
+          <div style="font-size:48px;line-height:1;margin-bottom:12px">✓</div>
+          <h3 style="color:#1E3FE8;margin:0 0 8px">קיבלנו את הפרטים שלכם</h3>
+          <p style="margin:0;color:#3A3F5C">תום שי תחזור אליכם בהקדם. תודה על ההתעניינות!</p>
+        </div>
+        <div id="formFields">
 
         <div class="grid">
           <div class="field full">
@@ -306,7 +307,8 @@
         </div>
 
         <div class="submit-row">
-          <button type="submit">שליחת פרטים</button>
+          <button type="submit" id="submitBtn">שליחת פרטים</button>
+        </div>
         </div>
       </form>
     </section>
@@ -329,13 +331,28 @@
 (function(){
   var GAS_URL = 'https://script.google.com/macros/s/AKfycbywYcAc7bnQEVzAz69xs0ZcNa5Oef9woYgGpJf9bCJAYoTM-QEVT9uySGpl6-dq1gPp/exec';
   var form = document.getElementById('leadForm');
+  var fields = document.getElementById('formFields');
+  var thanks = document.getElementById('thankYou');
+  var btn = document.getElementById('submitBtn');
   if (!form) return;
-  form.addEventListener('submit', function(){
-    try {
-      var data = new FormData(form);
-      data.append('_source', 'pedagogy.github.io');
-      fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: data });
-    } catch (e) {}
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (form._honey && form._honey.value) return;
+    btn.disabled = true;
+    btn.textContent = 'שולח...';
+    var data = new FormData(form);
+    data.append('_source', 'pedagogy.github.io');
+    fetch(GAS_URL, { method: 'POST', mode: 'no-cors', body: data })
+      .then(function(){
+        fields.style.display = 'none';
+        thanks.style.display = 'block';
+        thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      })
+      .catch(function(){
+        btn.disabled = false;
+        btn.textContent = 'שליחת פרטים';
+        alert('אירעה שגיאה. נסו שוב או צרו קשר ישיר עם תום שי 054-940-7145');
+      });
   });
 })();
 </script>
